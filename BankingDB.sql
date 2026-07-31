@@ -107,5 +107,43 @@ desc Customers;
  REFERENCES Branches(BranchID);
  desc Accounts;
  
+ -- Transaction connect with Accounts 
+ ALTER TABLE transactions
+ Add AccountID INT;
+ 
+ ALTER TABLE Transactions
+ADD CONSTRAINT FK_Transactions_Accounts
+FOREIGN KEY (AccountID)
+REFERENCES Accounts(AccountID);
+desc transactions;
+
+ALTER TABLE Transactions
+ADD CONSTRAINT PK_TransactionID
+PRIMARY KEY (TransactionID);
+
+-- Connect Loan with Customers
+ALTER TABLE Loans
+ADD CustomerID INT;
+
+ALTER TABLE Loans
+ADD CONSTRAINT FK_Loans_Customers
+FOREIGN KEY (CustomerID)
+REFERENCES Customers(CustomerID);
+
+desc Loans;
+
+ALTER TABLE Loans
+ADD CONSTRAINT PK_LoanID
+PRIMARY KEY (LoanID);
+
+ SELECT
+  CONSTRAINT_NAME,
+ CONSTRAINT_TYPE
+ FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS
+ WHERE TABLE_SCHEMA= "bankingdb"
+ AND TABLE_NAME = "Transactions";
+ 
+ SHOW CREATE TABLE Accounts;
+ 
  
  
