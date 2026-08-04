@@ -145,5 +145,52 @@ PRIMARY KEY (LoanID);
  
  SHOW CREATE TABLE Accounts;
  
+ INSERT INTO Customers
+ (CustomerID, FirstName, LastName, Email, Phone, DateOfBirth)
+ VALUES
+ (101,'Rahul','Sharma','rahulsharma@gmail.com','9876543210','1998-04-15');
+ 
+ SELECT * From Customers;
+ UPDATE Customers
+SET AccountCreationDate = '2026-08-01'
+WHERE CustomerID = 101;
+
+ SELECT * From Customers;
+ 
+ INSERT INTO Customers
+ VALUES
+ (10,'Rahul','Sharma','rahulsharma@gmail.com','9876543210','2026-08-04', '1998-04-15');
+ 
+  INSERT INTO Customers
+ VALUES
+ (102,'Ketan','Tiwaro','ketan@gmail.com','2428543210','2026-08-04', '1788-07-10');
+ SELECT * From Customers;
+ 
+ INSERT INTO Customers
+ VALUE
+ (103,'Neha','Singh','neha@gmail.com','8975643210','2025-02-04', '2025-05-15');
+  INSERT INTO Customers
+ VALUE
+ (104,'Tanu','Patil','Tanu@gmail.com','8579312210','2025-06-10', '2005-01-20'),
+ (105,'Shweta','Pal','shweta@gmail.com','8975643210','2025-11-20', '2004-05-22');
+ SELECT * From Customers;
+ 
+INSERT INTO Branches
+(BranchID, BranchName, BranchAddress, BranchPhone)
+value
+(1, 'Dharmpeth','Nagpur',0712-568941);
+SELECT * From Branches;
+
+INSERT INTO Accounts
+(AccountID, AccountType, Balance, CustomerID, BranchID)
+value
+(301, 'Savings', 25000, 101, 1);
+SELECT * From Accounts;
+
+ 
+
+ 
+ 
+ 
  
  
