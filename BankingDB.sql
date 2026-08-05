@@ -181,16 +181,107 @@ value
 (1, 'Dharmpeth','Nagpur',0712-568941);
 SELECT * From Branches;
 
+INSERT INTO Branches
+value
+(2, 'Kamptee', 'Kamptee Road', 8745963147),
+(3, 'Kuhi', 'Bhandara', 8746931454);
+
 INSERT INTO Accounts
 (AccountID, AccountType, Balance, CustomerID, BranchID)
 value
 (301, 'Savings', 25000, 101, 1);
 SELECT * From Accounts;
 
- 
+INSERT INTO Accounts
+value
+(302, 'Savings', 50000, 102, 2),
+(303, 'Savings', 75000, 103, 3);
 
+INSERT INTO Accounts
+value
+(304, 'Current', 1000000, 103,3);
+
+-- INSER INTO Accounts
+-- Value 
+-- (305, 'Current', 25000, 105,5),
+
+
+DELETE FROM ACCOUNTS
+WHERE AccountID = 201;
+
+update accounts
+set balance = balance+2000
+where accountid = 304;
+
+INSERT INTO Loans
+(LoanID, LoanAmount, InterestRate, StartDate, EndDate, CustomerID)
+value
+(4001, 50000.00, 10, '2024-01-01', '2025-12-31', 101);
+SELECT* FROM Loans;
+
+INSERT INTO Transactions
+(TransactionID, TransactionDate, Amount, TransactionType, AccountID)
+value
+(50001, '2025-06-10', 100000.00, 'Deposit', 301);
+SELECT * FROM Transactions;
+
+INSERT INTO Trsanctions
+value
+(50002, '2025-07-11', 10000.00, 'Withdrawal', 302),
+(50003, '2025-08-12', 55000.00, 'Deposit', 304);
+
+insert	into transactions
+value 
+(50002, '2026-01-05', 100000.00, 'Deposit', 304),
+(50003, '2025-07-14', 1000.00, 'Withdrawal', 301);
+
+delete from transactions
+where TransactionID = 5000;
+
+UPDATE ACCOUNTS
+SET Balance = 30000
+where CustomerID = 101;
+
+update customers 
+set Email = 'rahulsharma@gmail.com', Phone = '7249884501'
+where customerid = 101;
+
+delete from accounts
+where accountid = 303;
+
+SELECT* FROM Accounts;
+SELECT* FROM Branches;
+SELECT* FROM Customers;
+SELECT* FROM Loans;
+SELECT* FROM Transactions;
+
+-- select column-name from table-name;  DQL command  
+-- * represents all
+SELECT   
+    CustomerID, FirstName, LastName, Phone
+FROM
+    Customers;
+    
+ -- where clause filtering data (conditions)
  
+ SELECT * From Accounts
+ Where AccountType = 'Savings';
  
+ SELECT * FROM ACCOUNTS
+ WHERE BALANCE <50000;
  
- 
- 
+--  !=/<> not equal to
+
+SELECT *FROM ACCOUNTS
+WHERE ACCOUNTTYPE <>'Savings';
+
+SELECT * FROM ACCOUNTS
+WHERE BALANCE <=50000 AND ACCOUNTTYPE = 'SAVINGS';
+-- AND = && can use by this two types
+-- OR = || can use by this tow types 
+
+SELECT * FROM ACCOUNTS
+WHERE BALANCE <=50000 OR ACCOUNTTYPE = 'SAVINGS';
+
+SELECT * FROM ACCOUNTS
+WHERE NOT ACCOUNTTYPE = 'SAVINGS';
