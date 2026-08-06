@@ -249,12 +249,6 @@ where customerid = 101;
 delete from accounts
 where accountid = 303;
 
-SELECT* FROM Accounts;
-SELECT* FROM Branches;
-SELECT* FROM Customers;
-SELECT* FROM Loans;
-SELECT* FROM Transactions;
-
 -- select column-name from table-name;  DQL command  
 -- * represents all
 SELECT   
@@ -285,3 +279,76 @@ WHERE BALANCE <=50000 OR ACCOUNTTYPE = 'SAVINGS';
 
 SELECT * FROM ACCOUNTS
 WHERE NOT ACCOUNTTYPE = 'SAVINGS';
+
+SELECT * From Customers
+Where AccountCreationDate >='2026-07-01';
+
+update Customers 
+set Phone = '7597463145' and phone = '2428543210'
+where customerID = 105;
+
+-- 06-08-2026
+-- USED IN Operators
+SELECT FirstName, LastName, Phone
+From Customers
+where Phone IN ('7249884501', '2428543210', '8975643210');
+
+SELECT FirstName, LastName, Phone
+From Customers
+where Phone = '7249884501' or Phone = '2428543210' or Phone ='8975643210';
+
+-- Using Between Operator (we can give range)
+-- Find customers having balance between 20000 to 60000
+Select AccountID, CustomerId, balance
+from Accounts
+where Balance Between 20000 and 60000;
+-- the values specified in the range are included in the results.
+
+Select AccountID, CustomerID , balance
+from accounts
+where balance >=20000 and Balance <=60000; -- using logical operator
+
+-- LIKE operator use for pattern matching
+-- two wild card characters 
+-- %=matches any number of characters, even zero characters
+-- "_"Underscore= Matches excatly one number of characters
+select * from Customers 
+where FirstName Like 'K%';
+
+-- Customers whose last name ends with"a"
+select * from Customers 
+where FirstName Like '%a';
+
+-- Find all customers whose last name has excatly 3 characters
+select * from Customers 
+where LastName Like '___';
+
+-- ORDER BY 
+-- sort the accounts table according to customers balance.
+Select * From Accounts
+order by Balance DESC; 
+
+-- sort the Branches table according to Branch Name .
+Select * From Branches
+order by BranchName DESC; 
+
+-- Sort accoirding to multiple columns
+-- Sort accounts table according to the accounttype and balance
+Select * From Accounts
+Order by Accounttype ASC, Balance asc;
+
+-- using DISTINCT clause
+-- Find distinct(unique) account tyoes from accounts table
+SELECT DISTINCT AccountType
+FROM Accounts;
+
+-- find distinct transaction types and accountID
+-- from transactions Table
+SELECT DISTINCT TransactionType, AccountID
+FROM transactions;
+
+SELECT* FROM Accounts;
+SELECT* FROM Branches;
+SELECT* FROM Customers;
+SELECT* FROM Loans;
+SELECT* FROM Transactions;
