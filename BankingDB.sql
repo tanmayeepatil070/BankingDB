@@ -347,6 +347,85 @@ FROM Accounts;
 SELECT DISTINCT TransactionType, AccountID
 FROM transactions;
 
+-- offset limit  Select column_name from table_name limit number_of_rows offset skiped_rows
+SELECT * from Customers
+limit 2 offset 1;
+
+-- top 2 highest balance
+select* from accounts
+order by Balance Desc
+limit 2;
+
+-- customer having 3rd hightest balance 
+-- by using limit and offset
+select* from accounts
+order by Balance Desc
+limit 1 offset 2;
+
+-- by using only limit
+select* from accounts
+order by Balance Desc
+limit 2,1; -- here 1 specifies the number of row to be return and 2 denotes the rows to be skiped 
+
+-- Pagination
+-- Formula Page Number = P
+-- Records per page = N
+-- Offset = (P-1)*N
+
+-- IS NULL
+-- null is the absence of any value
+
+INSERT INTO Customers
+(CustomerID, FirstName, LastName, Email, Phone, AccountCreationDate, DateOfBirth)
+Values
+(106,'Priya', 'Patil', 'priya@gmail.com', NULL, '2024-05-12', '1999-07-16'),
+(107,'Adhira', 'Bagde', 'adhira@gmail.com', '9585671536', '2025-08-25', '2022-01-01'),
+(108,'Anshu', 'Shelare', 'anshu@gmail.com', NULL, '2023-02-10', '2008-12-17'),
+(109,'Kajal', 'Pande', 'kajal@gmail.com', '9875630402', '2026-02-20', '2007-02-23'),
+(110,'yash', 'Shende', 'yash@gmail.com', '7675459612', '2024-02-10', '2005-09-04');
+
+-- '______' is the string
+Select * From Customers
+where phone IS NULL;
+
+Select * From Customers
+where phone IS  NOT NULL;
+
+INSERT INTO Accounts
+(AccountID, AccountType, Balance, CustomerID, BranchID)
+Values
+(305, 'Current',40000, 105,1),
+(306, 'Savings',40500, 106,2),
+(307, 'Savings',80050, 107,3),
+(308, 'Current',70000, 108,2),
+(309, 'Current',100000, 109,1),
+(310, 'Savings',65000, 110,2);
+
+INSERT INTO Transactions
+(TransactionID, TransactionDate, Amount, TransactionType, AccountID)
+Values
+(50004, '2025-03-21',10000, 'Withdrawal',305),
+(50005, '2025-06-15',15000, 'Deposit',305),
+(50006, '2026-03-01',35000, 'Withdrawal',306),
+(50007, '2024-12-30','5000', 'Withdrawal',307),
+(50008, '2025-11-16','25000', 'Deposit',307);
+
+INSERT INTO Loans
+(LoanID, LoanAmount, InterestRate, StartDate, EndDate, CustomerID)
+Values
+(4002,100000,2.5,'2020-02-15','2021-02-14',102),
+(4003,105500,4.5,'2021-03-08','2022-02-10',103),
+(4004,150000,5,'2022-01-05','2023-02-14',104);
+
+-- CASE Statement  >50000 high value  <50000 low value
+Select AccountID, Balance,
+CASE
+When Balance>=50000 then 'HIGH VALUE'
+ELse 'LOW VALUE'
+END AS Category
+From Accounts;
+
+
 SELECT* FROM Accounts;
 SELECT* FROM Branches;
 SELECT* FROM Customers;
