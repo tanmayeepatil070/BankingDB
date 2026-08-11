@@ -338,7 +338,7 @@ Select * From Accounts
 Order by Accounttype ASC, Balance asc;
 
 -- using DISTINCT clause
--- Find distinct(unique) account tyoes from accounts table
+-- Find distinct(unique) account types from accounts table
 SELECT DISTINCT AccountType
 FROM Accounts;
 
@@ -424,6 +424,321 @@ When Balance>=50000 then 'HIGH VALUE'
 ELse 'LOW VALUE'
 END AS Category
 From Accounts;
+
+-- Categorize the deposits in the transactions table as per conditions given
+-- If above 10000(included) high amount alter
+-- If 5000(included) to 10000 Medium Amount
+-- If upto 5000 Low Amount
+-- For transaction type withdrawal "Not Applicable"
+Select TransactionType, Amount,
+CASE
+When TransactionType = 'Deposit' AND Amount >=10000 then 'HIGH AMOUNT'
+When TransactionType = 'Deposit' AND Amount >=5000 then ' MEDIUM AMOUNT' 
+When TransactionType = 'Deposit' And Amount <5000 then 'LOW AMOUNT'
+ELse 'Not Applicable'
+END AS AmountStatus
+From transactions;
+
+-- String Functions : Modify TEXT, 
+Select CustomerID, upper(FirstName), upper(LastName)
+From Customers; 
+
+Select CustomerID, lower(FirstName), lower(LastName)
+From Customer;
+
+-- Char Length and Length gives output in bytes
+
+Select LastName, length(lastName) from customers;
+
+Select LastName, char_length(LastName) from customers;
+Select length("NAGPUR"); -- GIVES O/P in number of bytes
+Select length("नागपूर"); -- GIVES O/P in number of bytes
+Select char_length("NAGPUR"); -- GIVES O/P in number of characters
+Select char_length("नागपूर"); -- GIVES O/P in number of characters
+
+-- CONCAT() means to join like lastName and firstname results into full name
+SELECT CustomerID,CONCAT(FirstName, ' ', LastName,' - ', Phone) AS FullName
+FROM Customers;
+
+-- Substring function (String,Position,Length) to extract
+Select CustomerID, concat(Substring(FirstName, 1, 1),". ", LastName) As Full
+From Customers;
+
+
+
+
+
+-- Practice 10-08-2026 
+-- (1) Display the CustomerID, FirstName and Email of customers whose AccountCreationDate is after 1-Jan-2025.
+select CustomerID, FirstName, Email
+From Customers
+where AccountCreationDate > '2025-01-01';
+
+-- (2) Display all Savings accounts having balance greater than ₹20,000.
+Select * From Accounts
+Where AccountType = 'Savings' AND Balance >20000;
+
+-- (3)Display customers whose Phone number is NOT NULL.
+Select * From Customers 
+Where Phone IS NOT NULL;
+
+-- (4)Display distinct Account Types available in the Accounts table.
+Select DISTINCT AccountType
+From Accounts;
+
+-- (5) Display customers whose FirstName starts with 'R'
+Select * From Customers
+Where FirstName Like  'R%';
+
+-- (6)Display accounts having Balance between ₹20,000 and ₹60,000.
+Select *  From Accounts 
+Where Balance BETWEEN 20000 AND 60000;
+
+-- (7)Display all Deposit transactions whose amount is greater than ₹3000.
+Select * From Transactions 
+Where TransactionType = 'Deposit' AND Amount >3000;
+
+-- (8)Display customers whose CustomerID is IN (101,103,106,109) 
+Select * From Customers 
+Where CustomerID IN (101, 103, 106, 109);
+
+-- (9)Display first 5 customers ordered by CustomerID.
+Select * From Customers
+ORDER By CustomerID
+Limit 5;
+
+-- (10)Display customers after skipping first 3 records.
+Select * From Customers 
+LIMIT 10 OFFSET 3;
+
+
+-- (11)Display Savings accounts having balance between ₹20,000 and ₹80,000.
+Select * From Accounts 
+Where AccountType = 'Savings' AND Balance Between 20000 AND 80000;
+
+-- (12)Display customer names whose phone number is NULL and account was created after 2025-01-01.
+Select FirstName, LastName 
+From Customers
+Where Phone IS NULL AND AccountCreationDate >2025-01-01;
+
+-- (13)Display all customers whose FirstName starts with 'A' OR LastName starts with 'S'.
+Select * From Customers 
+Where FirstName LIKE 'A%' 
+OR LastName LIKE 'S%';
+
+-- (14)Display all accounts whose AccountType is Savings or Salary and balance is greater than ₹10,000.
+Select * From Accounts 
+Where AccountType IN ('Savings', 'Salary')
+AND Balance >10000; 
+
+-- (15)Display customers whose CustomerID is IN (101,102,105,109) and phone number is not NULL.
+Select * From Customers
+Where CustomerID IN (101, 102, 105, 109) AND Phone IS NOT NULL;
+
+Select * From Customers
+Where CustomerID IN (101, 102, 105, 109) AND Phone IS NULL;
+
+-- (16)Display transactions whose Amount is between ₹2,000 and ₹8,000 and TransactionType is Deposit.
+Select * From Transactions
+Where TransactionType = 'Deposit' And Amount Between 1000 and 30000;
+
+-- (17)Display distinct BranchIDs from Accounts where balance is greater than ₹30,000.
+Select DISTINCT BranchID 
+From Accounts 
+Where Balance > 30000;
+
+-- (18)Display customers whose email contains gmail and first name ends with a.
+Select * From Customers
+Where Email LIKE '%gmail%' and 
+FirstName LIKE '%a';
+
+-- (19)Display customers whose DateOfBirth is between 1995 and 2000.
+Select * From Customers 
+Where DateOfBirth Between '1995-01-01' AND '2000-12-31';
+
+-- (20)Display first 3 Savings accounts having balance greater than ₹25,000.
+Select * From Accounts
+Where AccountType = 'Savings' AND Balance > 25000
+LIMIT 3;
+
+-- (21)Display customers whose FirstName starts with &#39;P&#39; and Phone IS NULL.
+Select * From Customers
+Where FirstName LIKE 'P%' AND Phone IS NULL;
+
+-- (22)Display accounts whose balance is NOT BETWEEN ₹20,000 and ₹50,000.
+Select * From Accounts
+Where Balance NOT BETWEEN 20000 And 50000;
+
+-- (23)Display customers whose CustomerID is NOT IN (101,102,103).
+Select * From Customers
+Where CustomerID NOT IN (101, 102, 103);
+
+-- (24)Display transactions that are Withdrawal and amount is less than ₹5000.
+Select * From Transactions
+Where TransactionType = 'Withdrawal' AND Amount < 5000;
+
+-- (25)Display customers whose email ends with gmail.com and phone number is available.
+Select * From Customers
+Where Email LIKE '%gmail.com' AND Phone IS NOT NULL;
+
+-- (26)Display distinct transaction types whose amount is greater than ₹5000.
+Select Distinct TransactionType
+From Transactions
+Where Amount > 5000;
+
+-- (27)Display all Savings accounts belonging to Branch 1 or Branch 3.
+Select * From Accounts
+Where AccountType = 'Savings'
+AND BranchID IN (1, 3);
+
+-- (28)Display customers whose first name contains 'ha' and DateOfBirth is after 1997.
+Select * From Customers
+Where FirstName Like '%ha' AND DateOfBirth > '1997-12-31';
+
+-- (29)Display accounts whose balance is greater than ₹30,000 but less than ₹80,000.
+Select * From Accounts
+Where Balance > 30000 AND Balance <80000;
+
+-- (30)Display first 4 Deposit transactions after skipping first 2 deposits.
+Select * From Transactions
+Where TransactionType = 'Deposit' 
+Order BY TransactionID 
+LIMIT 4 Offset 2;
+
+-- (31)Display customer names whose phone number is NULL OR email starts with s.
+Select FirstName, LastName 
+From Customers
+Where Phone IS NULL OR Email Like 's%';
+
+-- (32)Display Savings accounts having balance greater than ₹10,000 AND belonging to Branch 1.
+Select *
+From Accounts
+Where AccountType = 'Savings' 
+And Balance > 10000
+And BranchID = 1;
+
+-- (33)Display Current accounts having balance between ₹40,000 and ₹1,00,000.
+Select * From Accounts
+Where AccountType = 'Current'
+And Balance Between 40000 and 100000;
+
+-- (34)Display customers whose last name starts with S and were created after 2024.
+Select * From Customers
+Where LastName Like 'S%' AND 
+AccountCreationDate > '2024-01-01';
+
+-- (35)Display transactions whose amount is IN (2000,3000,5000,7000).
+Select * From Transactions
+Where Amount IN (2000,3000,5000,7000);
+
+-- (36)Display customers whose first name starts with R or P, phone number is available and CustomerID is greater than 103.
+Select * From Customers 
+Where (FirstName Like 'R%' OR FirstName LIKE 'P%')
+And Phone IS NOT NULL
+ANd CustomerID >103;
+
+-- (37)Display distinct balances greater than ₹15,000.
+Select Distinct Balance
+From Accounts
+Where Balance > 15000;
+
+-- (38)Display all accounts except Savings accounts having balance above ₹25,000.
+Select * From Accounts
+Where AccountType <> 'Savings' And Balance > 25000;
+
+-- (39)Display customers whose email contains gmail but phone number is missing.
+Select * From Customers
+Where Email LIKE '%gmail%'
+AND Phone IS NOT NULL;
+
+-- (40)Display accounts whose balance is between ₹15,000 and ₹90,000 and AccountType is not Salary.
+Select * From Accounts 
+Where Balance Between 15000 and 90000
+And AccountType <> 'Salary';
+
+-- (41)Display first 5 customers whose FirstName starts with A or R, ordered by CustomerID.
+Select * From Customers 
+Where FirstName Like 'A%' OR FirstName LIKE 'R%'
+Order bY CustomerID
+Limit 5;
+
+-- (42)Display Savings and Salary Accounts whose balance is greater than 15,000 and less than 60000
+Select * From Accounts 
+Where AccountType = 'Savings' And Balance > 15000 
+And Balance < 60000;
+
+-- (43)Display customers whose CustomerID is IN (101,103,105,107,109) and DateOfBirth is between 1994and 2000.
+Select * From Customers 
+Where CustomerID IN (101,103,105,107,109)
+AND DateOfBirth between '1994-01-01'AND '2000-12-31'; 
+
+-- (44)Display transactions whose amount is greater than ₹2000 but less than ₹8000 and TransactionType is not Withdrawal.
+Select * From transactions
+Where Amount >2000 And Amount <8000
+AND TransactionType <> 'Withdrawal';
+
+-- (45)Display customers whose phone number is NULL or FirstName 'an'
+Select * from Customers 
+Where Phone IS NULL 
+OR FirstName LIKE '%an%';
+
+-- (46)Display distinct AccountTypes where balance is greater than ₹20,000.
+Select Distinct AccountType
+From Accounts 
+Where Balance > 20000;
+
+-- (47)Display customers after skipping first 2 records and display only the next 4 records.
+Select * From Customers
+ORDER BY CustomerID
+LIMIT 4 OFFSET 2;
+
+-- (48)Display customers whose last name ends with 'ma' and email contains gmail.
+Select * From Customers
+Where LastName LIKE '%ma'
+And email LIKE '%gmail%';
+
+-- (49)Display accounts whose BranchID is IN (1,2) and balance is between ₹20,000 and ₹70,000.
+Select * From Accounts 
+Where BranchID IN (1,2)
+AND Balance BETWEEN 20000 AND 70000;
+
+-- (50)Display all customers whose first name starts with S, phone number is not NULL, and account was created between 1-Jan-2025 and 31-Dec-2025.
+Select * From Customers
+WHere FirstName LIKE 'S%'
+And Phone IS NOT NULL 
+And AccountCreationDate BETWEEN '2025-01-01' and '2025-12-31';
+
+-- (1)Display all customers whose first name starts with &#39;R&#39; or &#39;S&#39; but whose phone number is NULL.
+Select * From Customers
+Where FIrstName Like 'R%' OR FirstName Like 'S%'
+And Phone IS NULL;
+
+-- (2)Display all accounts that are not Savings accounts and have a balance greater than ₹30,000.
+Select * From Accounts 
+Where AccountType <> 'Savings'
+AND Balance > 30000;
+
+-- (3)Display customers whose CustomerID is not 101, 102, or 103.
+Select * From Customers 
+Where CustomerID NOT IN (101, 102, 103);
+
+
+-- (4)Display customers whose email does not end with &quot;gmail.com&quot;.
+Select  * From Customers 
+Where Email NOT LIKE '%gmail,com';
+
+-- (5)Display accounts whose balance is not between ₹20,000 and ₹50,000.
+Select * From Accounts 
+Where balance not BETWEEN 20000 AND 50000;
+
+-- (6)Display all transactions except Deposit transactions.
+Select * From transactions
+Where TransactionType <> 'Deposit';
+
+-- (7)Display customers whose first name contains the letter 'a' but does not start with 'A'.
+Select * From Customers 
+Where FirstName Like '%a%' AND FirstName NOT Like '%A%';
+
 
 
 SELECT* FROM Accounts;
