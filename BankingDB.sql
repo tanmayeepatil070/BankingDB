@@ -439,7 +439,7 @@ ELse 'Not Applicable'
 END AS AmountStatus
 From transactions;
 
--- String Functions : Modify TEXT, 
+-- String Functions : Modify TEXT, Analyze text, format text
 Select CustomerID, upper(FirstName), upper(LastName)
 From Customers; 
 
@@ -464,7 +464,32 @@ FROM Customers;
 Select CustomerID, concat(Substring(FirstName, 1, 1),". ", LastName) As Full
 From Customers;
 
+-- Trim  function Removes leading (LTRIM) and trailing (RTRIM) spaces
+Select length(TRIM("   Hello World   ")); -- with TRIM()
+Select length("   Hello World   "); -- Without TRIM()
+Select length(trim(Substring("Hello World",6)));
 
+-- Replace function - Replaces a part of string or replaces occurances of the specified string
+-- It is case sensitive
+Select replace("MAT","M","C");
+Select replace("MAT MAT","M","C");
+Select replace("MAT mAT","M","C");
+Select replace("Madhya Pradesh","Madhya","Andhra");
+
+
+
+
+
+
+
+
+
+
+SELECT* FROM Accounts;
+SELECT* FROM Branches;
+SELECT* FROM Customers;
+SELECT* FROM Loans;
+SELECT* FROM Transactions;
 
 
 
