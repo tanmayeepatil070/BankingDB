@@ -476,13 +476,91 @@ Select replace("MAT MAT","M","C");
 Select replace("MAT mAT","M","C");
 Select replace("Madhya Pradesh","Madhya","Andhra");
 
+-- Mathematical functions
+-- Round function - Rounds number to given decimal places.
+
+Select avg(Balance) From accounts 
+where AccountType = 'Savings';
+
+Select round(avg(Balance),2) From accounts 
+where AccountType = 'Savings';
+
+-- CEIL()/CEILING() returns the smallest integer value not less than x. REutns NULL if x is NULL.
+-- it rounds the number upward
+Select ceil(avg(Balance)) From accounts 
+where AccountType = 'Savings';
+
+-- Floor() - Rounds to downward or Return the largest interger value not greater than the argument
+Select floor(avg(Balance)) From accounts 
+where AccountType = 'Savings';
+
+Select floor(avg(Balance)) From accounts 
+where AccountType = 'Current';
+
+Select floor(avg(Amount)) From transactions 
+where TransactionType = 'Deposit';
+
+Select avg(Amount) as AverageDeposit From transactions 
+where TransactionType = 'Deposit';
+
+-- Absolute() - returns positive number
+Select abs(-2453) As Example;
+Select abs(-2.43) As Example;
+Select abs(453) As Example;
+Select abs(45.23) As Example;
+
+-- MOD() Remainder - It returns the remainder after division
+Select (7/3); -- simple division
+Select mod(7,3);
+
+-- POWER() - Exponent=Raises number to power
+Select power(2,3);
+Select power(1.5,3);
+
+-- SQRT() - Square root = 
+Select sqrt(144) ;
+Select sqrt(123) ;
+
+-- DATE AND TIME FUNCTIONS
+-- Format yyyy-mm-dd; hh-mm-ss
+-- NOW() Current date & time
+Select now();
+Select current_date(); -- returns current date
+Select current_time(); -- returns current time
+Select year(current_date()); -- returns year
+Select month(current_date()); -- returns month
+Select day(current_date()); -- returns day
+ 
+-- YEAR(), MONTH(), DAY()
+Select  DateOfBirth,Year(DateOfBirth)As YEAR,
+Month(DateOfBirth) As MONTH,
+Day(DateOfBirth) As DAY
+From Customers;
+
+-- Datediff - Difference between Dates- returns 
+Select concat(FirstName," ",LastName)AS FullName, DateOfBirth, 
+datediff(Current_Date(),DateOfBirth)/365 As Age
+From Customers;
+
+SELECT CONCAT(FirstName, ' ', LastName) AS FullName,
+       DateOfBirth,
+       FLOOR(DATEDIFF(CURRENT_DATE(), DateOfBirth) / 365) AS Age
+FROM Customers;
+
+SELECT CONCAT(FirstName, ' ', LastName) AS FullName,
+       DateOfBirth,
+       YEAR(CURRENT_DATE()) - YEAR(DateOfBirth) AS Age
+FROM Customers;
 
 
+-- DATE_ADD() - Add Days - Adds interval to date
+Select concat(FirstName, " ", LastName) AS FullName,
+AccountCreationDate,date_add(AccountCreationDate,interval 1 Year)
+From Customers;
 
 
-
-
-
+-- DATE_SUB() - 
+ 
 
 
 SELECT* FROM Accounts;
