@@ -555,13 +555,124 @@ FROM Customers;
 
 -- DATE_ADD() - Add Days - Adds interval to date
 Select concat(FirstName, " ", LastName) AS FullName,
-AccountCreationDate,date_add(AccountCreationDate,interval 1 Year)
+AccountCreationDate,date_add(AccountCreationDate,interval 1 Year) as KYC_Update
+From Customers;
+Select concat(FirstName, " ", LastName) AS FullName,
+AccountCreationDate,date_sub(AccountCreationDate,interval 1 Year) as KYC_Update
 From Customers;
 
-
--- DATE_SUB() - 
+-- COUNT FUNCTION Count() returns single value 
+Select count(*) As TotalCustomers from customers; -- (includes null values)
+Select count(Phone) As TotalCustomers from customers; -- (does not include null values)
  
+ -- SUM FUNCTION Sum() returns single value 
+ Select SUM(Balance)  As TotalBalance 
+ from Accounts;
+ 
+ Select SUM(Balance)  As SavingsBalance 
+ from Accounts
+ where AccountType = 'Savings';
+ 
+  Select SUM(Balance)  As CurrentBalance 
+ from Accounts
+ where AccountType = 'Current';
+ 
+ -- AVERAGE FUNCTION Avg()
+ Select avg(Amount) As AvgAmount From transactions;
+ 
+ Select avg(Amount) As AvgWithdrawal From transactions
+ Where TransactionType = 'Withdrawal';
+ 
+  Select avg(Amount) As AvgDeposit From transactions
+ Where TransactionType = 'Deposit';
+ 
+ -- MAX AND MIN Functions max() and min()
+ Select max(Balance) As Maximum From Accounts
+ Where AccountType = 'Savings';
+ 
+  Select min(Balance) As Maximum From Accounts
+ Where AccountType = 'Savings';
+ 
+ -- GROUP BY function - Group by is continuous value 
+ Select TransactionType,Sum(Amount) As Total
+ From transactions
+ group by (TransactionType);
+ 
+  Select TransactionType,Count(Amount) As Total
+ From transactions
+ group by (TransactionType);
+ 
+ Select AccountType, 
+		Count(AccountType) As Count, 
+		AVG(Balance) As Average,
+        sum(Balance) as Sum
+ From Accounts
+ Group by (AccountType);
+ 
+ -- Find total accounts for branch and accouttype 
+ Select AccountType, BranchID, 
+		Count(*)
+ From Accounts
+ Group by AccountType,BranchID
+ Order by BranchID;
+ 
+Select AccountType, BranchID, 
+		Count(AccountType) As Count, 
+		round(AVG(Balance),2) As Average,
+        sum(Balance) as Sum
+ From Accounts
+ Group by AccountType,BranchID
+ Order by BranchID;
+ 
+ -- HAVING Clause - Filters the group
+ Select AccountType, BranchID, 
+		Count(*) as NoOfAccounts
+ From Accounts
+ Group by AccountType,BranchID
+ Having NoOfAccounts >= 2 and AccountType = 'Savings';
+ 
+ -- Find no of customers according to years from custmers table 
+ SELECT 
+    YEAR(AccountCreationDate) AS years, COUNT(*) AS CountYear
+FROM Customers
+GROUP BY Years
+order by years;
+ -- having year >=2025
 
+ SELECT 
+    Month(AccountCreationDate) AS Months, COUNT(*) AS CountMonth
+FROM Customers
+GROUP BY Months
+order by Months;
+ 
+-- JOINS - A JOIN combines related rows from different tables based on a common column.
+-- INNER JOIN - Matches rows that exist in both tables (retunrs commom rows)
+
+-- Find all customers having loans with their names, interest rate and loan amount
+SELECT 
+    C.FirstName, C.LastName, L.InterestRate, L.LoanAmount
+FROM Customers C
+INNER JOIN Loans L 
+ON C.CustomerID = L.CustomerID;
+ 
+ -- using CONCAT for full name 
+ SELECT C.CustomerID,CONCAT(C.FirstName, ' ', C.LastName) AS FullName,
+       L.InterestRate,
+       L.LoanAmount
+FROM Customers C
+INNER JOIN Loans L
+ON C.CustomerID = L.CustomerID; -- Inner join is the default join
+
+-- Find the branch names for all the accountid's
+-- Include accountid, Accounttype and branchname, branchaddress
+Select A.AccountID, A.Accounttype, B.BranchName, B.BranchAddress
+From Accounts A
+INNER JOIN Branches B
+ON A.BranchID = B.BranchID;
+ 
+ 
+ 
+ 
 
 SELECT* FROM Accounts;
 SELECT* FROM Branches;
