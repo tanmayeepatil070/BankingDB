@@ -668,11 +668,93 @@ ON C.CustomerID = L.CustomerID; -- Inner join is the default join
 Select A.AccountID, A.Accounttype, B.BranchName, B.BranchAddress
 From Accounts A
 INNER JOIN Branches B
-ON A.BranchID = B.BranchID;
+ON A.BranchID = B.BranchID
+Where AccountType = 'Savings';
+
+-- FInd all the customers(name, phone, accounttype, balance) where Account type is savings
+ Select CONCAT(C.FirstName, ' ', C.LastName) AS FullName, C.Phone, 
+ A. AccountType, A. Balance
+ From Customers C
+INNER JOIN Accounts A
+ON C.CustomerID = A.CustomerID
+Where AccountType = 'Savings' and PHONE IS NOT NULL; 
+ 
+ -- LEFT JOIN - RETURNS ALL ROWS FROM THE LEFT TABLE, AND MATCHED ROWS FROM THE RIGHT.
+ 
+ INSERT INTO Customers (CustomerID, FirstName, LastName, Email, Phone, AccountCreationDate, DateOfBirth)
+ VALUES 
+ (111, 'Vikram', 'Joshi', 'vikram@gmial.com', '9876500011', '2026-02-10', '1993-05-12'),
+ (112,'Anjali', 'Deshpande', 'anjali@gmial.com', NULL, '2026-03-15', '1998-08-25'),
+ (113,'Suresh', 'Pawar', 'suresh@gmial.com', '9856713465', '2025-12-10', '1991-06-24');
+ 
+ -- (LEFT JOIN) - 
+ SELECT C.FirstName, C.LastName, C.Phone, A.AccountType, A.Balance
+ From Customers C
+LEFT JOIN Accounts A 
+ON C.CustomerID = A.CustomerID;
+ 
+SELECT C.FirstName, C.LastName, C.Phone, A.AccountType, A.Balance
+ From Accounts A
+LEFT JOIN Customers C
+ON C.CustomerID = A.CustomerID;
+ 
+ -- Adding values for right join
+ INSERT INTO branches
+ VALUES (4, 'Nashik Branch', 'College Road, Nashik','0253-456789');
+ 
+ INSERT INTO Accounts (AccountID, AccountType, Balance, CustomerID, BranchID)
+ VALUES 
+ (1011,'Savings', 22000, 111, 4),
+ (1012,'Current', 35000, 112, 2);
+ 
+ UPDATE Accounts 
+ SET AccountID = 311
+ Where CustomerID = 111;
+ 
+  UPDATE Accounts 
+ SET AccountID = 312
+ Where CustomerID = 112;
+ 
+ INSERT INTO transactions
+ VALUES 
+(50009,'2025-03-10', 8000, 'Deposit',301),
+(50010,'2025-03-15', 1500, 'Withdrawal',301),
+(50011,'2025-03-20', 12000, 'Deposit',302),
+(50012,'2025-04-05', 4000, 'Withdrawal',302),
+(50013,'2025-04-10', 7000, 'Deposit',304),
+(50014,'2025-04-15', 2500, 'Withdrawal',304),
+(50015,'2025-05-01', 6000, 'Deposit',305),
+(50016,'2025-05-10', 2000, 'Withdrawal',305);
+
+INSERT INTO Accounts 
+VALUES
+(303,'Savings', 27000, 104, 4);
+
+INSERT INTO Accounts 
+VALUES
+(313,'Current', 80000, 101, 4),
+(314,'Savings', 45000, 103, 3);
+
+  -- RIGHT JOIN
+ 
+ SELECT C.FirstName, C.LastName, C.Phone, A.AccountType, A.Balance
+ From Accounts A
+RIGHT JOIN Customers C
+ON C.CustomerID = A.CustomerID;
  
  
+-- QUESTIONS
+ Select concat(C.FirstName, " ", C.LastName) as FullName,A.AccountID, A.AccountType, A.Balance
+ From Customers C
+INNER JOIN Accounts A
+ON C.CustomerID = A.CustomerID;
  
- 
+ -- Using concat_ws seprator
+ Select C.CustomerID,A.AccountID, concat_ws(" ", C.FirstName, C.LastName) as FullName, A.AccountType, A.Balance
+ From Customers C
+INNER JOIN Accounts A
+ON C.CustomerID = A.CustomerID
+Order BY C.CustomerID;
 
 SELECT* FROM Accounts;
 SELECT* FROM Branches;
