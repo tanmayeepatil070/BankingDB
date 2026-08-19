@@ -756,12 +756,158 @@ INNER JOIN Accounts A
 ON C.CustomerID = A.CustomerID
 Order BY C.CustomerID;
 
+-- FULL OUTER JOIN = RETURNS ALL ROWS WHEN THERE IS A MATCH IN EITHER TABLE 
+-- JOINING LEFT AND RIGHT JOIN USING union  
+
+-- Joining Customers and Accounts 
+select * From Customers C
+LEFT JOIN Accounts A
+On C.CustomerID = A.CustomerID
+UNION
+select * From Customers C
+RIGHT JOIN Accounts A
+On C.CustomerID = A.CustomerID;
+
 SELECT* FROM Accounts;
 SELECT* FROM Branches;
 SELECT* FROM Customers;
 SELECT* FROM Loans;
 SELECT* FROM Transactions;
 
+-- PRACTICE 18-08-2026
+-- 1. Display customers who do not have a Current account.
+SELECT concat(C.FirstName, ' ', C.LastName) AS FullName, AccountType
+FROM Customers C
+LEFT JOIN Accounts A
+ON C.CustomerID = A.CustomerID AND A.Accounttype <> 'Current';
+
+-- 2. Display Customername,Accountcreation date,Accounttype,Balancefor customers whose account was created in 2025.
+SELECT concat(C.FirstName, ' ', C.LastName) AS CustomerName,C.AccountCreationDate, A.AccountType, A.Balance
+FROM Customers C
+INNER JOIN Accounts A
+ON C.CustomerID = A.CustomerID
+WHERE YEAR(C.AccountCreationDate) = 2025;
+
+-- 3. Display:Customername,Accountcreation date,Accounttype and calculate the number of days since account creation.
+SELECT concat(C.FirstName, ' ', C.LastName) AS CustomerName,C.AccountCreationDate, A.AccountType, A.Balance,
+DATEDIFF(CURDATE(),C.AccountCreationDate) AS Days -- DATEDIFF is used to return the difference between the dates
+FROM Customers C
+INNER JOIN Accounts A
+ON C.CustomerID = A.CustomerID;
+
+-- 4. Find the number of accounts held by each customer.
+SELECT concat(C.FirstName, ' ', C.LastName) AS CustomerName, C.CustomerID, COUNT(A.AccountID) AS NoOFAccounts
+From Customers C
+LEFT JOIN Accounts A
+ON C.CustomerID = A.CustomerID
+Group BY C.CustomerID; -- We have to group according to customerID as we can have same names
+
+-- 5. Find the total balance held by each customer.
+SELECT concat(C.FirstName, ' ', C.LastName) AS CustomerName, SUM(A.Balance) AS TotalBalance
+From Customers C
+LEFT JOIN Accounts A
+ON C.CustomerID = A.CustomerID
+Group BY C.CustomerID, C.FirstName, C.LastName;
+
+-- 6. Find the number of customers for each account type.
+SELECT AccountType, COUNT(DISTINCT CustomerID) AS NoOfCustomers
+From Accounts
+Group BY AccountType;
+
+-- 6. Find the number of customers for each account type.
+SELECT AccountType, COUNT(C.CustomerID) AS NoOfCustomers
+From Accounts A
+LEFT JOIN Customers C
+ON C.CustomerID = A. CustomerID
+Group BY AccountType;
+
+-- 6. Find the number of customers for each account type.
+SELECT AccountType, COUNT(C.CustomerID) AS NoOfCustomers
+From Accounts A
+RIGHT JOIN Customers C
+ON C.CustomerID = A. CustomerID
+Group BY AccountType;
+
+-- 7. Find the total balance for each account type.
+SELECT AccountType, SUM(Balance) As TotalBalance
+From Accounts 
+Group By AccountType;
+
+-- 8. Find the highest balance held by each account type.
+SELECT AccountType, MAX(Balance) As HighestBalance
+From Accounts 
+Group By AccountType;
+
+-- 9. Find the number of customers for each branch.
+SELECT BranchID, COUNT(DISTINCT CustomerID) AS NoOfCustomers
+From Accounts
+Group BY BranchID;
+
+-- 10. Find customers whose total account balance is greater than ₹40,000.
+SELECT concat(C.FirstName, ' ', C.LastName) AS CustomerName, SUM(A.Balance) As TotalBalance
+FROM Customers C
+JOIN Accounts A
+ON C.CustomerID = A.CustomerID
+GROUP BY C.CustomerID, C.FirstName, C.LastName
+HAVING  SUM(A.Balance) > 40000;
+
+-- 11. Find customers who have more than one account.
+SELECT concat(C.FirstName, ' ', C.LastName) AS CustomerName, COUNT(A.AccountID)
+From Customers C
+INNER JOIN Accounts A
+ON C.CustomerID = A. CustomerID
+Group by C.CustomerID
+Having COUNT(A.AccountID) > 1;
+
+-- 12. Find customers who do not have an account.
+SELECT concat(C.FirstName, ' ', C.LastName) AS CustomerName
+From Customers C
+LEFT JOIN Accounts A
+ON C.CustomerID = A. CustomerID
+WHERE A.CustomerID IS NULL;
+
+-- 14. Find customers who have never performed a transaction.
+SELECT C.CustomerID,concat(C.FirstName, ' ', C.LastName) AS CustomerName, COUNT(T.AccountID) as NoofTransactions
+FROM Customers C
+JOIN Accounts A
+ON C.CustomerID = A.CustomerID
+LEFT JOIN Transactions T 
+ON A.AccountID = T.AccountID
+Group by (C.CustomerID) -- Because we want customers that's why CustomerID is used in group by 
+HAVING NoofTransactions = 0;
+
+-- 15. Display all branches and their account count, including branches that have zero accounts.
+SELECT B.BranchID,  B.BranchName, COUNT(A.AccountID) as COUNTAccount
+FROM Branches B
+LEFT JOIN Accounts A 
+ON A.BranchID = B.BranchID
+Group by B.BranchID, B.BranchName
+Having COUNTAccount > 2;
+
+
+
+
+
+
+
+
+
+-- 16. Display all savings accounts customers along with branch name.
+SELECT C.CustomerID, concat(C.FirstName, ' ', C.LastName) AS CustomerName, A.AccountType , B.BranchName
+From Customers C
+LEFT JOIN Accounts A
+ON C.CustomerID = A.CustomerID
+INNER JOIN Branches B 
+ON A.BranchID = B.BranchID
+WHERE A.AccountType = 'Savings';
+
+
+
+SELECT* FROM Accounts;
+SELECT* FROM Branches;
+SELECT* FROM Customers;
+SELECT* FROM Loans;
+SELECT* FROM Transactions;
 
 
 -- Practice 10-08-2026 
