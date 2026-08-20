@@ -886,12 +886,6 @@ Having COUNTAccount > 2;
 
 
 
-
-
-
-
-
-
 -- 16. Display all savings accounts customers along with branch name.
 SELECT C.CustomerID, concat(C.FirstName, ' ', C.LastName) AS CustomerName, A.AccountType , B.BranchName
 From Customers C
@@ -901,8 +895,83 @@ INNER JOIN Branches B
 ON A.BranchID = B.BranchID
 WHERE A.AccountType = 'Savings';
 
+INSERT INTO Branches
+VALUES
+(5, 'Sadar', 'Mount Road,Sadar', 7524631984);
+
+-- A SELF JOIN IS A REGYLAR JOIN, BUT THE TABLE IS JOINED WITH ITSELF
+-- used case - 
+CREATE TABLE Employees (
+EmployeeID INT PRIMARY KEY,
+EmployeeName VARCHAR(50) NOT NULL,
+ManagerID INT,
+Department VARCHAR(50),
+Salary DECIMAL(10,2),
+JoiningDate DATE,
+BranchID INT,
+
+FOREIGN KEY (ManagerID)
+REFERENCES Employees(EmployeeID),
+
+FOREIGN KEY (BranchID)
+REFERENCES Branches(BranchID)
+);
+desc Employees;
+
+-- Made this table for self join
+INSERT INTO Employees
+    (EmployeeID, EmployeeName, ManagerID, Department, Salary, JoiningDate, BranchID)
+VALUES
+    (1, 'Rajesh Sharma', NULL, 'Management', 120000.00, '2018-04-15', 1),
+    (2, 'Priya Patel', 1, 'Human Resources', 75000.00, '2019-06-10', 2),
+    (3, 'Amit Kumar', 1, 'Finance', 82000.00, '2020-01-20', 3),
+    (4, 'Sneha Verma', 1, 'IT', 95000.00, '2019-09-05', 4),
+    (5, 'Rahul Singh', 1, 'Sales', 78000.00, '2021-03-12', 5),
+    (6, 'Neha Joshi', 2, 'Human Resources', 55000.00, '2021-07-19', 1),
+    (7, 'Vikas Gupta', 2, 'Human Resources', 52000.00, '2022-02-14', 2),
+    (8, 'Pooja Mehta', 3, 'Finance', 60000.00, '2021-11-08', 3),
+    (9, 'Suresh Yadav', 3, 'Finance', 58000.00, '2022-05-16', 4),
+    (10, 'Anjali Deshmukh', 4, 'IT', 72000.00, '2020-08-24', 5),
+    (11, 'Rohan Kulkarni', 4, 'IT', 68000.00, '2021-10-11', 1),
+    (12, 'Kavita Rao', 4, 'IT', 65000.00, '2022-01-17', 2),
+    (13, 'Arjun Malhotra', 5, 'Sales', 57000.00, '2022-06-20', 3),
+    (14, 'Meena Shah', 5, 'Sales', 59000.00, '2021-12-06', 4),
+    (15, 'Deepak Thakur', 5, 'Sales', 54000.00, '2023-01-09', 5),
+    (16, 'Nitin Pawar', 6, 'Human Resources', 42000.00, '2023-04-18', 1),
+    (17, 'Swati Mishra', 7, 'Human Resources', 40000.00, '2023-07-03', 2),
+    (18, 'Manish Jain', 8, 'Finance', 45000.00, '2023-02-27', 3),
+    (19, 'Komal Sinha', 9, 'Finance', 43000.00, '2023-08-14', 4),
+    (20, 'Akash Bansal', 10, 'IT', 50000.00, '2023-05-22', 5);
+    
+-- SELF JOIN
+-- Write a query to display employeeid, employeeName, EmployeesNames as Manager
+SELECT E.EmployeeID AS EmployeesID, E.EmployeeName, M.EmployeeName AS Managers, E.BranchID
+FROM Employees E
+LEFT JOIN Employees M
+ON E.ManagerID = M.EmployeeID;
+
+SELECT E.EmployeeID AS EmployeesID, E.EmployeeName, M.EmployeeName AS Managers, E.BranchID,B.BranchName
+FROM Employees E
+LEFT JOIN Employees M
+ON E.ManagerID = M.EmployeeID
+INNER JOIN Branches B 
+ON B.BranchID = E.BranchID
+ORDER BY EmployeesID Asc;
 
 
+SELECT E.EmployeeID AS EmployeesID, E.EmployeeName, M.EmployeeName AS Managers, E.BranchID
+FROM Employees E
+INNER JOIN Employees M
+ON E.ManagerID = M.EmployeeID;
+    
+    SELECT E.EmployeeID AS EmployeesID, E.EmployeeName, M.EmployeeName AS Managers, E.BranchID
+FROM Employees E
+RIGHT JOIN Employees M
+ON E.ManagerID = M.EmployeeID;
+    
+    
+
+SELECT * FROM Employees;
 SELECT* FROM Accounts;
 SELECT* FROM Branches;
 SELECT* FROM Customers;
