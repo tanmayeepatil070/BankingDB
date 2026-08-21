@@ -958,7 +958,6 @@ INNER JOIN Branches B
 ON B.BranchID = E.BranchID
 ORDER BY EmployeesID Asc;
 
-
 SELECT E.EmployeeID AS EmployeesID, E.EmployeeName, M.EmployeeName AS Managers, E.BranchID
 FROM Employees E
 INNER JOIN Employees M
@@ -968,8 +967,66 @@ ON E.ManagerID = M.EmployeeID;
 FROM Employees E
 RIGHT JOIN Employees M
 ON E.ManagerID = M.EmployeeID;
-    
-    
+
+-- Display which employees are under sneha verma 
+SELECT E.EmployeeID AS EmployeesID, E.EmployeeName, E.Department
+FROM Employees E
+LEFT JOIN Employees M
+ON E.ManagerID = M.EmployeeID
+WHERE M.EmployeeName = "Sneha Verma"; -- cannot use alias name of the column name in where, we have to use subqueries
+
+-- Find all Customers having balance more than average balance in the savings account.
+SELECT AVG(Balance) AS AVGBalacne 
+From Accounts
+Where AccountType = 'Savings';
+-- Find all Customers having balance more than average balance in the savings account.
+SELECT C.CustomerID,C.FirstName, AVG(A.Balance) AS AvgBalance
+FROM Customers C
+JOIN Accounts A  
+ON C.CustomerID = A.CustomerID
+WHERE A.AccountType = 'Savings'
+Group By C.CustomerID, C.FirstName
+Having AvgBalance > 44943.75 ;
+   
+-- SUBQUERIES = QUERY WRITTEN INSIDE A ANOTHER SQL QUERY
+-- CAN BE USED IN = SELECT/INSERT/UPDATE/DELETE 
+   SELECT  A.AccountID,C.CustomerID,C.FirstName, A.Balance
+FROM Customers C
+JOIN Accounts A  
+ON C.CustomerID = A.CustomerID
+Where A.AccountType = 'Savings'
+AND A.Balance >(
+		SELECT AVG(Balance) AS AVGBalacne 
+		From Accounts
+		Where AccountType = 'Savings'); 
+   
+-- TYPES OF SUBQUERIES 
+-- SCALAR SUBQUERY = RETURNS EXCATLY ONE ROW AND ONE COLUMN.(SINGLE VALUE)
+
+SELECT AccountID, CustomerID
+From Accounts
+Where AccountType = 'Savings' AND Balance >(
+   SELECT AVG(Balance) AS AVGBalacne 
+		From Accounts
+		Where AccountType = 'Savings'); 
+        
+-- Find the accounts having the highest balance
+SELECT AccountID, CustomerID, Balance
+From Accounts
+Where Balance =(
+   SELECT MAX(Balance)
+		From Accounts
+		);
+        
+   SELECT  MAX(Balance)
+   From Accounts;
+   
+   
+   
+   
+   
+   
+   
 
 SELECT * FROM Employees;
 SELECT* FROM Accounts;
