@@ -1020,13 +1020,30 @@ Where Balance =(
         
    SELECT  MAX(Balance)
    From Accounts;
+
+-- Find Customers whose year of birth is earlier than the average year of birth of all customers.
+SELECT CustomerID, FirstName,year(DateOfbirth) 
+From Customers
+Where Year(DateOfBirth) < (
+			Select Floor(Avg(year(DateofBirth)))
+				From Customers);
+   
+Select Avg(year(DateofBirth))
+From Customers;
    
    
-   
-   
-   
-   
-   
+-- MULTIPLE ROW SUBQUERY
+-- A MULTIPLE ROW SUBQUERY RETUNRS MORE THAN ONE ROW, USUALLY ASINGLE COLUMN.   
+-- Q. Find all customers who have taken at least one loan.
+
+SELECT CustomerID, concat(FirstName, ' ', LastName), Phone
+From Customers
+Where CustomerID IN (SELECT CustomerID
+From Loans); 
+
+
+
+
 
 SELECT * FROM Employees;
 SELECT* FROM Accounts;
