@@ -1041,11 +1041,69 @@ From Customers
 Where CustomerID IN (SELECT CustomerID
 From Loans); 
 
+-- Find all accounts whose balance is greater than any account in BranchID = 1.
+SELECT AccountID, Balance From Accounts
+Where Balance > ANY
+(SELECT AccountID
+From Accounts
+Where BranchID = 1);
+
+-- Find all accounts whose balance is greater than all accounts in BranchID = 1.
+SELECT AccountID, Balance From Accounts
+Where Balance > ALL
+(SELECT Balance
+From Accounts
+Where BranchID = 1);
+
+-- Q. Find the branch with highest average account balance
+SELECT BranchID, AVG(Balance) AS AverageBalance
+FROM Accounts
+GROUP BY BranchID
+HAVING AVG(Balance) >= ALL (
+    SELECT AVG(Balance)
+    FROM Accounts
+    GROUP BY BranchID
+);
+
+SELECT A1.BranchID, AVG(A1.Balance) AS AverageBalance
+FROM Accounts A1
+GROUP BY A1.BranchID
+HAVING AVG(A1.Balance) >= ALL (
+    SELECT AVG(A2.Balance)
+    FROM Accounts A2
+    WHERE A2.BranchID <> A1.BranchID
+    GROUP BY A2.BranchID
+);
+-- ANY works as OR minimum value 
+-- ALL works as AND maximum value
+
+-- CORRELATED SUBQUERY (ACTS LIKE SELF JOIN CONCEPT BUT FROM OUTER QUERY)
+-- A CORRELATED SUBQUERY REFERENCES ONE OR MORE COLUMNS FORM THE OUTER QUERY.
+--  works row by row
+
+-- Find accounts whose balance is greater than the average balance of their respective branch.
+SELECT * FROM Accounts A
+Where A.Balance > (
+SELECT AVG(A2.Balance) 
+From Accounts A2
+Where A.BranchID = A2.BranchID);
+
+-- Find employees whose salary is greater than the average salary of their respective department.
+SELECT E.EmployeeID, E.EmployeeName, E.Salary,E.Department
+  From Employees E
+Where E.Salary > ( 
+SELECT AVG(E1.Salary) From Employees E1
+Where E.Department = E1.Department);
+
+-- Find customers who have more than one account.
+SELECT Concat(C.FirstName,' ', C.LastName) AS FullName, C.CustomerID From Customers C
+Where 1 < (
+SELECT COUNT(*)
+From Accounts A
+Where A.CustomerID = C.CustomerID);
 
 
-
-
-SELECT * FROM Employees;
+SELECT* FROM Employees;
 SELECT* FROM Accounts;
 SELECT* FROM Branches;
 SELECT* FROM Customers;
@@ -1053,7 +1111,7 @@ SELECT* FROM Loans;
 SELECT* FROM Transactions;
 
 
--- Practice 10-08-2026 
+-- Practice 10-08-2026  BASICS QURIES OF SQL
 -- (1) Display the CustomerID, FirstName and Email of customers whose AccountCreationDate is after 1-Jan-2025.
 select CustomerID, FirstName, Email
 From Customers
@@ -1324,7 +1382,157 @@ Where TransactionType <> 'Deposit';
 Select * From Customers 
 Where FirstName Like '%a%' AND FirstName NOT Like '%A%';
 
+-- 8. Display distinct account types except Current.
+SELECT Distinct(AccountType)
+From Accounts
+Where AccountType != 'Current';
 
+-- 9. Display customers who have phone numbers available but were created before 2025.
+SELECT *
+FROM Customers
+WHERE Phone IS NOT NULL
+  AND AccountCreationDate < '2025-01-01';
+
+-- 10. Display first 3 Savings accounts after skipping the first 2 Savings accounts.
+SELECT * From Accounts 
+Where AccountType = 'Savings'
+LIMIT 3 OFFSET 2;
+
+-- Tricky Level 2
+-- 11. Display customers whose CustomerID is between 101 and 110 but not equal to 105 or 108.
+SELECT * From Customers
+Where CustomerID between 101  AND 110
+AND CustomerID NOT IN (105, 108);
+
+-- 12. Display transactions whose amount is greater than ₹2000 but not equal to ₹5000.
+SELECT * From Transactions
+Where Amount > 2000 AND 
+Amount !=  5000;
+
+-- 13. Display customers whose last name starts with 'S' and email contains gmail but phone number is NULL.
+SELECT * From Customers
+Where LastName LIKE 'S%' 
+AND Email LIKE '%gmail%'
+AND Phone IS NULL;
+
+-- 14. Display accounts having balance between ₹15,000 and ₹60,000 but not belonging to Branch 2.
+SELECT * From Accounts 
+Where Balance Between 15000  and 60000
+AND BranchID != 2;
+
+-- 15. Display customers whose FirstName starts with 'P' or ends with 't'.
+SELECT * From Customers
+Where FirstName LIKE 'P%' 
+OR FirstName LIKE'%t'; 
+
+-- 16. Display accounts whose AccountType is Savings or Salary but balance is not between ₹10,000 and ₹40,000.
+SELECT * From Accounts 
+Where AccountType = 'Savings'
+AND Balance NOT Between 10000 AND 40000;
+
+-- 17. Display customers whose DateOfBirth is after 1995 but before 2000.
+SELECT * From Customers
+Where Year(DateOfBirth) > 1995 And 
+Year(DateOfBirth) < 2000;
+
+-- 18. Display customers whose email contains gmail but FirstName does not contain 'a'.
+SELECT * From Customers 
+Where Email Like '%gmail%' 
+AND FirstName NOT LIKE '%a%';
+
+-- 19.Display transactions whose amount is between ₹2000 and ₹8000 but TransactionType is not Withdrawal.
+SELECT * From Transactions
+Where Amount Between 2000 AND 8000
+AND TransactionType != 'Withdrawal';
+
+-- 20. Display only the next 5 customers after skipping the first 4 customers.
+SELECT * From Customers
+ORDER BY CustomerID
+LIMIT 5 OFFSET 4;
+
+-- Tricky Level 3 (Logical Confusion)
+-- 21. Display all Savings accounts having balance greater than ₹20,000 OR belonging to Branch 1. (Students often mistakenly use AND.)
+SELECT * From Accounts
+Where AccountType = 'Savings'
+AND (Balance > 20000 
+OR BranchId = 1);
+
+-- 22. Display all customers whose phone is NULL OR email contains gmail.
+SELECT * From Customers
+Where Phone IS NULL 
+OR Email LIKE '%gmail%';
+
+-- 23. Display customers whose FirstName starts with 'A' or 'R' and whose CustomerID is greater than 105. (Requires proper use of parentheses.)
+SELECT * From Customers 
+Where (FirstName LIKE 'A%' 
+OR FirstName LIKE 'R%')
+AND CustomerID > 105;
+
+-- 24. Display customers whose CustomerID is NOT IN (101,103,105) and phone number is NOT NULL.
+SELECT * From Customers
+Where CustomerID NOT IN (101, 103, 105)
+AND Phone IS NOT NULL;
+
+-- 25. Display accounts whose balance is less than ₹10,000 OR greater than ₹80,000.
+SELECT * From Accounts 
+Where Balance < 10000 
+OR Balance > 80000;
+
+-- 26. Display transactions whose amount is NOT BETWEEN ₹3000 and ₹7000.
+SELECT * From Transactions
+Where amount NOT Between 3000 AND 7000;
+
+-- 27. Display customers whose last name ends with 'kar' OR starts with 'D'.
+SELECT * From Customers 
+Where LastName Like '%kar' 
+OR LastName Like 'D%';
+
+-- 28. Display customers whose email starts with 'a'; OR phone number is NULL, but whose CustomerID is
+-- greater than 105.(Requires parentheses:(condition1 OR condition2) AND condition3.)
+SELECT * From Customers
+Where (Email Like 'a%' 
+OR Phone IS NULL) 
+AND CustomerID > 105;
+
+-- 29. Display all accounts except Savings having balance between ₹25,000 and ₹60,000.
+SELECT * From Accounts
+Where AccountType != 'Savings' 
+AND Balance BETWEEN 25000 AND 60000;
+
+-- 30. Display customers whose FirstName starts with 'R', Phone IS NOT NULL, CustomerID is between
+-- 101 and 110, and AccountCreationDate is after 2024-12-31.
+SELECT * From Customers
+Where FirstName Like 'R%' AND phone IS NOT NULL
+AND CustomerID Between 101 AND 110
+AND AccountCreationDate > '2024-12-31';
+
+-- Bonus Questions (Designed to Catch Common Mistakes)
+-- These are excellent practical exam questions because students often make logical errors.
+-- 31. Display customers whose FirstName starts with 'A' or 'S' and Phone IS NOT NULL.
+SELECT * From Customers 
+Where (FirstName LIKE 'A%' OR FirstName LIKE 'S%')
+AND Phone IS NOT NULL;
+
+-- 32. Display customers whose Phone IS NULL and CustomerID is not in (101,102).
+SELECT * From Customers
+Where Phone IS NULL 
+AND CustomerID NOT IN (101, 102);
+
+-- 33. Display accounts whose Balance > 30000 and AccountType is Savings or Salary.
+-- (Requires parentheses if written using OR.)
+SELECT * From Accounts
+Where Balance > 30000 
+AND (AccountType = 'Savings' OR AccountType = 'Salary');
+
+-- 34. Display customers whose FirstName contains 'a'; but LastName does not contain 'a'.
+SELECT * From Customers 
+Where FirstName LIKE '%a%'
+AND LastName NOT LIKE '%a%';
+
+-- 35. Display only 4 customers after skipping the first 3 customers, ordered by FirstName.
+SELECT * From Customers
+ORDER BY FirstName 
+LIMIT 4 OFFSET 3;
 
 SELECT* FROM Accounts;
 SELECT* FROM Branches;
