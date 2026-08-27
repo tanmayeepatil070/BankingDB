@@ -1102,6 +1102,101 @@ SELECT COUNT(*)
 From Accounts A
 Where A.CustomerID = C.CustomerID);
 
+-- TABLE SUBQUERY (DERIVED TABLE / INLINE VIEW
+-- USED IN from CLAUSE
+-- THE SUBQUERY MUST HAVE ALIAS NAME
+
+-- Find the average account balance for each account type using a derived table.
+SELECT AccountType, AVG(Balance) AS AvgBalance
+From (SELECT * From Accounts 
+Where AccountType IN ('Savings', 'Current') 
+) AS AccountData
+Group BY AccountType;
+
+SELECT AccountData.AccountType, AccountData.AvgBalance
+From (
+		SELECT AccountType, avg(Balance) AS AvgBalance 
+        From Accounts 
+		Group By (AccountType) ) AccountData;
+
+-- Display only those account types whose average balance is greater than ₹30,000.
+SELECT AccountData.AccountType, AccountData.AvgBalance
+From (
+	SELECT AccountType, AVG(Balance) as AvgBalance
+    From Accounts 
+    Group By (AccountType) ) AccountData
+    Where AvgBalance > 100000;
+    
+-- Find the top 3 customers based on their total account balance.
+SELECT AccountData.TotalBalance, AccountData.CustomerID, AccountData.FullName
+From (
+SELECT Sum(Balance) as TotalBalance, A.CustomerID, concat(C.FirstName, ' ', C.LastName) As FullName 
+		From Accounts A
+		INNER JOIN Customers C 
+		ON A.CustomerID = C.CustomerID
+Group By CustomerID ) AS AccountData
+ORDER BY TotalBalance DESC
+LIMIT 3;
+    
+-- Find customers whose total account balance is greater than ₹50,000.
+SELECT AccountData.TotalBalance, AccountData.CustomerID
+From (
+SELECT Sum(Balance) as TotalBalance, CustomerID
+From Accounts 
+Group By CustomerID ) AS AccountData
+Where Totalbalance > 50000;    
+
+-- Find the account type having the highest average balance.
+SELECT AccountData.AccountType, AccountData.AvgBalance
+From (
+	SELECT AccountType, AVG(Balance) as AvgBalance
+    From Accounts 
+    Group By (AccountType) ) AccountData
+    Order By AccountType
+    LIMIT 1;
+
+-- Find branches whose average account balance is greater than ₹30,000.-- 
+SELECT AccountData.BranchID, AccountData.AvgBalance
+From (
+	SELECT BranchID, AVG(Balance) as AvgBalance
+    From Accounts 
+    Group By (BranchID) ) AccountData
+    Where AvgBalance > 100000;
+
+-- Subquery in SELECT Clause
+
+-- Display each customer along with the number of accounts they have.
+SELECT C.CustomerID, (
+			SELECT Count(*)
+			From Accounts A
+			WHere C.CustomerID = A.CustomerID
+            )AS NoofCustomers
+		From Customers C
+        order by NoofCustomers DESC;
+
+SELECT A1.CustomerID, (
+			SELECT Count(*)
+			From Accounts A
+			WHere A1.CustomerID = A.CustomerID
+            )AS NoofCustomers
+		From Accounts A1
+        order by NoofCustomers DESC;
+
+-- SUBQUERIES INSIDE UPDATE CLAUSE
+-- Increase the balance of accounts belonging to customers who have taken a loan by 5%.
+UPDATE Accounts
+SET Balance = Balance * 1.05
+WHERE CustomerID IN (
+    SELECT CustomerID
+    FROM Loans
+);
+
+UPDATE Accounts
+SET Balance = Balance + Balance*0.05
+WHERE CustomerID IN (
+    SELECT CustomerID
+    FROM Loans
+);
 
 SELECT* FROM Employees;
 SELECT* FROM Accounts;
