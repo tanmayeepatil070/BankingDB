@@ -107,12 +107,10 @@ ON E.reportsTo = M.employeeNumber;
 -- Question Set 4:
 -- 1. For each order, list the order number, customer name, 
 -- and the name of the sales rep responsible for that customer.
-SELECT 
-    O.orderNumber,
-    C.customerName,
-    ( SELECT CONCAT(E.firstName, ' ', E.lastName)
-        FROM employees E
-        WHERE E.employeeNumber = C.salesRepEmployeeNumber) AS SalesRepName
+SELECT O.orderNumber, C.customerName,
+( SELECT CONCAT(E.firstName, ' ', E.lastName)
+FROM employees E
+WHERE E.employeeNumber = C.salesRepEmployeeNumber) AS SalesRepName
 FROM orders O
 INNER JOIN customers C
 ON O.customerNumber = C.customerNumber;
@@ -134,12 +132,26 @@ Having AVGPrice > 50;
 
 -- 4. List all products that were ordered in 2005. 
 -- Show the product code, product name, and the total quantity ordered in that year.
-SELECT 
+SELECT P.productCode, P.productName, SUM(OD.quantityOrdered) AS TotalQuantityOrdered
+FROM products P
+INNER JOIN orderdetails OD
+ON P.productCode = OD.productCode
+WHERE OD.orderNumber IN (
+    SELECT orderNumber
+    FROM orders
+    WHERE YEAR(orderDate) = 2005)
+GROUP BY P.productCode, P.productName;
 
+-- 5. Find customers who have not placed any orders.
+SELECT customerNumber, customerName
+FROM customers
+WHERE customerNumber NOT IN (
+    SELECT customerNumber
+    FROM orders );
 
-
-
-
+-- Question Set 5:
+-- 1. Calculate the total value of inventory for each product line. 
+-- (Value = quantityInStock * buyPrice).
 
 
 

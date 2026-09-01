@@ -1197,7 +1197,72 @@ WHERE CustomerID IN (
     SELECT CustomerID
     FROM Loans
 );
+-- Delete all the transactions where TransactionType withdrawal and amount is less than 1000
+DELETE  From Transactions 
+Where TransactionID IN (
+Select TransactionID From (Select TransactionID From Transactions
+Where TransactionType = "Withdrawal"
+AND Amount < 2000 ) As Transaction);
 
+-- Make table of highValue customers with balance > 50000 AccountID, Balance, CustomerID, BranchID
+Create Table HighValueCustomers (
+AccountID int Primary Key,
+TotalBalance int,
+BranchID int ,
+CustomerID int);
+ALTER TABLE HighValueCustomers
+ADD AccountType VARCHAR(20),
+ADD Balance DECIMAL(10,2);
+ALTER TABLE HighValueCustomers
+ADD CONSTRAINT FK_HighValueCustomers_Branch
+FOREIGN KEY (BranchID) REFERENCES Branches(BranchID);
+
+ALTER TABLE HighValueCustomers
+ADD CONSTRAINT FK_HighValueCustomers_Customer
+FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID);
+
+-- Create a HighValueCustomers table and insert all accounts whose balance is greater than the average account balance
+INSERT INTO HighValueCustomers
+(AccountID, CustomerID, BranchID, AccountType, Balance)
+SELECT AccountID, CustomerID, BranchID, AccountType, Balance
+From Accounts
+Where Balance > ( SELECT Avg(Balance)
+From Accounts);
+
+-- 36. Create a HighBalanceCustomers table and insert customers whose total account balance is
+-- greater than ₹50,000.
+Create Table HighBalanceCustomers(
+CustomerID INT, 
+TotalBalnce INT,
+Foreign Key (CustomerID)
+References Customers(CustomerID));
+
+INSERT INTO HighBalanceCustomers
+(CustomerID, TotalBalnce)
+Select *
+From ( 
+SELECT CustomerID, SUM(Balance) as TotalBalnce
+From Accounts
+Group by CustomerID)
+			AS Customerbalances
+Where TotalBalnce > 50000;
+-- in INSERT DELET UPDATE to use subquery most of the time derived table subquery is used 
+
+-- SQL VIEWS 
+CREATE VIEW PremiumAccounts AS
+SELECT AccountID, AccountType, Balance, CustomerId
+From Accounts
+Where Balance > 50000;
+
+SELECT* From premiumaccounts;
+
+
+
+
+
+
+SELECT* From HighBalanceCustomers;
+SELECT* From HighValueCustomers;
 SELECT* FROM Employees;
 SELECT* FROM Accounts;
 SELECT* FROM Branches;
