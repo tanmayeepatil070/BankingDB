@@ -1248,19 +1248,55 @@ Group by CustomerID)
 Where TotalBalnce > 50000;
 -- in INSERT DELET UPDATE to use subquery most of the time derived table subquery is used 
 
--- SQL VIEWS 
-CREATE VIEW PremiumAccounts AS
-SELECT AccountID, AccountType, Balance, CustomerId
-From Accounts
+-- SQL VIEWS  (it does not table it stores virtual query)
+CREATE OR REPLACE VIEW PremiumAccounts AS
+SELECT A.AccountID, A.AccountType, A.Balance, A.CustomerId,
+T.TransactionType, T.TransactionDate, T.Amount
+From Accounts A
+JOIN Transactions T
+ON T.AccountID = A.AccountID
 Where Balance > 50000;
 
+-- group by is done with operators and by DISTINCT it will give you unique values  
+SELECT Distinct(CustomerID)AccountID, Balance  
+From PremiumAccounts
+ORDER BY Balance DESC
+LIMIT 2;
+
+-- Windows Functions - ( It creates the new column )
+-- 1. Perform Calculations across related rows
+-- 2. Do not reduce number of rows
+-- 3. USE the OVER() clause
+SELECT column1, -- (COLUMN1 - Columns you want to display)  
+	FUNCTION(column2) -- FUNCTION can be multiple (Calculation SUM, AVG, RANK, ROW_NUMBER, etc) 
+	OVER([PARTITION BY column3] [ORDER BY column4]) -- OVER() Makes it a window function
+    -- PARTITION BY - divides the data into groups (optional) / ORDER BY Define the order (optional)
+    AS new_column
+FROM table_name;
+-- OVER() Is what turns a function into a window functions
+-- Without OVER() it becomes a normal agrregate functions
+-- With OVER() becomes a window function
+SELECT AVG(Balance)
+From Accounts;
+
+SELECT AccountID, AccountType, Balance,
+Floor(AVG(Balance)
+OVER()) AS TotalAvgBalance
+From Accounts;
+
+-- PARTITION BY ( It works as a group by)
+-- (But it does NOT merge rows; It keeps very row visible)
+SELECT AccountID, AccountType, Balance,
+AVG(Balance)
+OVER(PARTITION BY AccountType) AS TotalAvgBalance
+From Accounts;
+
+SELECT AccountID, AccountType, Balance,
+AVG(Balance)
+OVER(PARTITION BY AccountType ORDER BY Balance) AS TotalAvgBalance
+From Accounts;
+
 SELECT* From premiumaccounts;
-
-
-
-
-
-
 SELECT* From HighBalanceCustomers;
 SELECT* From HighValueCustomers;
 SELECT* FROM Employees;
